@@ -90,7 +90,12 @@ PrefabInstance:
     - target: {fileID: 2664164840911906184, guid: 6f485efabbedbd346a008a86ae18062f,
         type: 3}
       propertyPath: dragAmount
-      value: 10
+      value: 80000
+      objectReference: {fileID: 0}
+    - target: {fileID: 2664164840911906184, guid: 6f485efabbedbd346a008a86ae18062f,
+        type: 3}
+      propertyPath: rotationSpeed
+      value: 700
       objectReference: {fileID: 0}
     - target: {fileID: 4223728262708394272, guid: 6f485efabbedbd346a008a86ae18062f,
         type: 3}

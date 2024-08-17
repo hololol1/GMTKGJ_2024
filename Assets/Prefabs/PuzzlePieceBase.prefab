@@ -105,8 +105,11 @@ MonoBehaviour:
   atTargetRotation: 0
   atTarget: 0
   debugColor: 1
+  target: {fileID: 0}
+  displacement: {x: 0, y: 0, z: 0}
   targets:
   - targetPosition: {x: 0, y: 0, z: 0}
+    adjustedTargetPosition: {x: 0, y: 0, z: 0}
     targetRotation: {x: 0, y: 0, z: 0, w: 1}
 --- !u!114 &2664164840911906184
 MonoBehaviour:
@@ -121,11 +124,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   horizontalMovement: 0
-  rotationSpeed: 1
+  rotationSpeed: 700
   movementSpeed: 1
-  dragAmount: 20
+  dragAmount: 80000
   movementSpace: {fileID: 0}
+  movementSpaceTargetNow: {fileID: 0}
   selected: 0
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!65 &1385470824750211323
 BoxCollider:
   m_ObjectHideFlags: 0
