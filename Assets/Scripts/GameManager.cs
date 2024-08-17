@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Loading;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -44,6 +45,10 @@ public class GameManager : MonoBehaviour
     {
         
         currentPuzzleComplete = CheckIfComplete();
+        if (currentPuzzleComplete)
+        {
+            NextPuzzle();
+        }
     }
 
     [System.Serializable]
@@ -62,6 +67,16 @@ public class GameManager : MonoBehaviour
 
     public void LoadPuzzle(int puzzleNumber)
     {
+        Debug.Log("loading Puzzle " + puzzleNumber);
+        if (puzzle.Length <= puzzleNumber)
+        {
+            Debug.Log("YouWon?");
+            //you won?
+            return;
+        }
+        else { 
+
+
         foreach (GameObject puzzlePiece in placedPuzzlePieces)
         {
             Destroy(puzzlePiece);
@@ -84,6 +99,14 @@ public class GameManager : MonoBehaviour
         }
         currentPuzzle = puzzleNumber;
             //Instantiate(puzzle[puzzleNumber].
+
+        }
+    }
+
+    public void NextPuzzle()
+    {
+        LoadPuzzle(currentPuzzle+1);
+        Debug.Log("PuzzleComplete, loading Puzzle " + currentPuzzle);
     }
 
     public bool CheckIfComplete()
