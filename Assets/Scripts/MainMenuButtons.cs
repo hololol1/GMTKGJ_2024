@@ -29,6 +29,11 @@ public class MainMenuButtons : MonoBehaviour
 
 	public void StartGame()
 	{
+		StartCoroutine(DelaySceneLoad());
+	}
+	IEnumerator DelaySceneLoad()
+	{
+		yield return new WaitForSeconds(0.1f);
 		SceneManager.LoadScene("MainGame", LoadSceneMode.Single);
 	}
 
