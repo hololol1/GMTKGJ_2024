@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PuzzleMover : MonoBehaviour
@@ -15,6 +16,11 @@ public class PuzzleMover : MonoBehaviour
     private float startMousePositionY;
     float mouseMovementX;
     float mouseMovementY;
+    Plane plane =new Plane(Vector3.down, -2);
+    private Vector3 startPosition;
+    private Vector3 objPosition;
+
+
 
     Rigidbody rb;
     //check if object true when an object is moved
@@ -24,6 +30,12 @@ public class PuzzleMover : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        startPosition = this.transform.position;
+        plane = new Plane(Vector3.down, startPosition);
+        if (horizontalMovement)
+        {
+            //plane = new Plane(Vector3.right, startPosition.x);           
+        }
     }
 
     // Update is called once per frame
@@ -36,15 +48,47 @@ public class PuzzleMover : MonoBehaviour
 
     void OnMouseDrag()
     {
-        dragging = true;
-        Vector3 mousePosition = new Vector3(Input.mousePosition.x, Input.mousePosition.y, -Camera.main.transform.position.z + transform.position.z);
-        if (horizontalMovement)
-        {
-            mousePosition = new Vector3(Input.mousePosition.x, transform.position.y, -Camera.main.transform.position.z + Input.mousePosition.z);
-        }
+        /*
 
-        Vector3 objPosition = Camera.main.ScreenToWorldPoint(mousePosition);
+        /*
+
+                Vector3 mousePosition = Input.mousePosition;
+        Ray objRayPosition = Camera.main.ScreenPointToRay(mousePosition);
+        if (Physics.Raycast(objRayPosition, out RaycastHit hitData))
+        {
+            objPosition = hitData.point;
+
+        }
+        //objPosition = Vector3.ClampMagnitude(objPosition, 100);
+        //objPosition.z = startPosition.z;
         transform.position = objPosition;
+        /*
+
+        /*
+        Vector3 mousePosition = Input.mousePosition;
+        //mousePosition.z = Camera.main.nearClipPlane +1;
+        mousePosition.z = Camera.main.nearClipPlane + 1;
+        objPosition = Camera.main.ScreenToWorldPoint(mousePosition);
+        //objPosition.z = startPosition.z;
+        transform.position = objPosition;
+        */
+
+        Vector3 mousePosition = new Vector3(Input.mousePosition.x, Input.mousePosition.y, -Camera.main.transform.position.z + transform.position.z);
+        mousePosition = Input.mousePosition;
+        Vector3 objPosition = Camera.main.ScreenToWorldPoint(mousePosition);
+        Ray objRayPosition = Camera.main.ScreenPointToRay(mousePosition);
+
+        if (plane.Raycast(objRayPosition, out float distance))
+        {
+            objPosition = objRayPosition.GetPoint(distance);
+            objPosition = Vector3.ClampMagnitude(objPosition, 100);
+        }
+        //objPosition.z = startPosition.z;
+        transform.position = objPosition;
+
+        dragging = true;
+       
+
     }
 
     public void MoveObject()
