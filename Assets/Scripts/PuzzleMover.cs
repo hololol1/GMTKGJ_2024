@@ -3,8 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PuzzleController : MonoBehaviour
+public class PuzzleMover : MonoBehaviour
 {
+    [SerializeField] bool horizontalMovement = false;
     [SerializeField] float rotationSpeed =1f;
     [SerializeField] float movementSpeed = 1f;
     [SerializeField] float dragAmount = 10f;
@@ -37,6 +38,11 @@ public class PuzzleController : MonoBehaviour
     {
         dragging = true;
         Vector3 mousePosition = new Vector3(Input.mousePosition.x, Input.mousePosition.y, -Camera.main.transform.position.z + transform.position.z);
+        if (horizontalMovement)
+        {
+            mousePosition = new Vector3(Input.mousePosition.x, transform.position.y, -Camera.main.transform.position.z + Input.mousePosition.z);
+        }
+
         Vector3 objPosition = Camera.main.ScreenToWorldPoint(mousePosition);
         transform.position = objPosition;
     }

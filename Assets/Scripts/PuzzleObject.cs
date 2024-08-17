@@ -1,18 +1,34 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public class PuzzleObject : MonoBehaviour
 {
     //[SerializeField] GameObject puzzlePiece;
-    [SerializeField] Vector3 targetPosition;
-    [SerializeField] Quaternion targetRotation;
+
+    //[SerializeField] public List<Target> targets = new List<Target>();
+
+
+    //[SerializeField] Vector3 targetPosition;
+    //[SerializeField] Quaternion targetRotation;
+
+
+
+
     [SerializeField] float allowedErrorMarginPosition = 5f;
     [SerializeField] float allowedErrorMarginRotation = 5f;
+
+
     //[SerializeField] Transform targetPosition ; //make this a variable range
     [SerializeField] bool atTargetPosition = false;
     [SerializeField] bool atTargetRotation = false;
     [SerializeField] bool atTarget = false;
+
+    [SerializeField] bool debugColor = true;
+
+
+
 
 
     //check if the object is at the pos it's supposed to be
@@ -28,43 +44,92 @@ public class PuzzleObject : MonoBehaviour
         atTargetPosition = CheckIfAtTargetPosition();
         atTargetRotation = CheckIfAtTargetRotation();
     }
+
+
+    [System.Serializable]
+    public class Target
+    {
+        [SerializeField] public Vector3 targetPosition;
+        [SerializeField] public Quaternion targetRotation;
+    }
+
+    [SerializeField]
+    public Target[] targets =
+    {
+        new Target()
+    };
+
+
     public bool CheckIfAtTarget()
     {
-        //Method 2 using sqrmagnitude & Quaternion.angle
-        //Use this one if you need more acurate result and control on objects
-        //modify the 0.1f paramters for more accuracy and filtering
-        Debug.Log(this.transform.rotation);
-        Debug.Log(targetRotation);
+        //Debug.Log(this.transform.rotation);
+        //Debug.Log(targetRotation);
 
-        if ((this.transform.position - targetPosition).sqrMagnitude < allowedErrorMarginPosition &&
-            Quaternion.Angle(this.transform.rotation.normalized, targetRotation) < allowedErrorMarginRotation)//Do confirm here if the vectors & quaternions are able to use equal comparer & result is satisfactory to your needs
+        bool isTrue = false;
+
+        for (int x = 0; x < targets.Length; x++)
         {
-            this.GetComponent<Renderer>().material.color = Color.green;
-            return true;
+            if ((this.transform.position - targets[x].targetPosition).sqrMagnitude < allowedErrorMarginPosition &&
+            Quaternion.Angle(this.transform.rotation.normalized, targets[x].targetRotation) < allowedErrorMarginRotation)
+            {
+                if (debugColor)
+                {
+                    this.GetComponent<Renderer>().material.color = Color.green;
+                }
+
+                isTrue = true;
+            }
 
         }
-        this.GetComponent<Renderer>().material.color = Color.gray;
-        return false;
+        if (!isTrue)
+        {
+            if (debugColor)
+            {
+                this.GetComponent<Renderer>().material.color = Color.gray;
+            }
+        }
+
+        return isTrue;
 
     }
 
     public bool CheckIfAtTargetPosition()
     {
-        if ((this.transform.position - targetPosition).sqrMagnitude < allowedErrorMarginPosition )
+        bool isTrue = false;
+
+        for (int x = 0; x < targets.Length; x++)
         {
-            return true;
+            if ((this.transform.position - targets[x].targetPosition).sqrMagnitude < allowedErrorMarginPosition)
+            {
+                isTrue = true;
+            }
+
         }
-        return false;
+        return isTrue;
+
     }
 
     public bool CheckIfAtTargetRotation()
     {
-        if (Quaternion.Angle(this.transform.rotation.normalized, targetRotation) < allowedErrorMarginRotation)
-        {
-            return true;
-        }
+        bool isTrue = false;
 
-        return false;
+        for (int x = 0; x < targets.Length; x++)
+        {
+            if (Quaternion.Angle(this.transform.rotation.normalized, targets[x].targetRotation) < allowedErrorMarginRotation)
+            {
+                isTrue = true;
+            }
+
+        }
+        return isTrue;
     }
 
+
+
 }
+
+
+
+
+
+
