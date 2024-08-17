@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 2664164840911906184}
   - component: {fileID: 1385470824750211323}
   - component: {fileID: 1111518544518681530}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: PuzzlePieceBase
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -124,6 +124,8 @@ MonoBehaviour:
   rotationSpeed: 1
   movementSpeed: 1
   dragAmount: 20
+  movementSpace: {fileID: 0}
+  selected: 0
 --- !u!65 &1385470824750211323
 BoxCollider:
   m_ObjectHideFlags: 0

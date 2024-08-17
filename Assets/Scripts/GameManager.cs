@@ -3,17 +3,39 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class GameController : MonoBehaviour
+public class GameManager : MonoBehaviour
 {
+    //Singleton
+    public static GameManager instance;
+
     public int currentPuzzle = 0;
     [SerializeField] GameObject puzzleContainer;
     [SerializeField] bool currentPuzzleComplete = false;
     [SerializeField] public List<GameObject> placedPuzzlePieces = new List<GameObject>();
 
+    public Transform selectedObject;
+    public Collider selectedObjectCollider;
 
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] Transform target;
+
+    private void Awake()
     {
+        #region Singleton
+        //Start Singleton
+        if (instance != null)
+        {
+            Debug.LogWarning("More than one Instance of Inventory found!");
+            return;
+        }
+        instance = this;
+        //End Singleton
+        #endregion Singleton
+    }
+
+        // Start is called before the first frame update
+        void Start()
+    {
+        target = GameObject.FindGameObjectsWithTag("Target")[0].transform;
         LoadPuzzle(0);
     }
 
@@ -40,10 +62,22 @@ public class GameController : MonoBehaviour
 
     public void LoadPuzzle(int puzzleNumber)
     {
+        foreach (GameObject puzzlePiece in placedPuzzlePieces)
+        {
+            Destroy(puzzlePiece);
+
+        }
+        placedPuzzlePieces.Clear();
+
         //initalize Puzzle
         for (int x = 0; x < puzzle[puzzleNumber].puzzlePieces.Length; x++)
         {
             placedPuzzlePieces.Add(Instantiate(puzzle[puzzleNumber].puzzlePieces[x], puzzleContainer.transform));
+
+            foreach (GameObject puzzlePiece in placedPuzzlePieces)
+            {
+                puzzlePiece.transform.position = new Vector3 (puzzlePiece.transform.position.x, puzzlePiece.transform.position.y, target.position.z);
+            }
             //Instantiate(puzzle[puzzleNumber].puzzlePieces[x],puzzleContainer.transform);
 
             //put this into a list
@@ -64,7 +98,7 @@ public class GameController : MonoBehaviour
             if (!puzzlePiece.GetComponent<PuzzleObject>().CheckIfAtTarget())
             {
                 solved = false;
-                Debug.Log("not solved");
+                //Debug.Log("not solved");
             }
         }
         /*

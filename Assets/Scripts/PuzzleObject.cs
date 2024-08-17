@@ -27,15 +27,17 @@ public class PuzzleObject : MonoBehaviour
 
     [SerializeField] bool debugColor = true;
 
-
+    [SerializeField] Transform target;
 
 
 
     //check if the object is at the pos it's supposed to be
     private void Start()
     {
+        target = GameObject.FindGameObjectsWithTag("Target")[0].transform;
         //targetPosition.position = piecePosition;
         //targetPosition.rotation = pieceRotation;
+
     }
 
     private void Update()
@@ -69,6 +71,7 @@ public class PuzzleObject : MonoBehaviour
 
         for (int x = 0; x < targets.Length; x++)
         {
+            targets[x].targetPosition.z = target.position.z;
             if ((this.transform.position - targets[x].targetPosition).sqrMagnitude < allowedErrorMarginPosition &&
             Quaternion.Angle(this.transform.rotation.normalized, targets[x].targetRotation) < allowedErrorMarginRotation)
             {
