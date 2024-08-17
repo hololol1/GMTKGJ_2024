@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using static UnityEngine.GraphicsBuffer;
 
@@ -27,15 +28,20 @@ public class PuzzleObject : MonoBehaviour
 
     [SerializeField] bool debugColor = true;
 
+    [SerializeField] Transform target;
 
+    [SerializeField] Vector3 displacement = new Vector3 (0,0,0);
 
 
 
     //check if the object is at the pos it's supposed to be
     private void Start()
     {
+        target = GameObject.FindGameObjectsWithTag("Target")[0].transform;
+        displacement = target.position;
         //targetPosition.position = piecePosition;
         //targetPosition.rotation = pieceRotation;
+
     }
 
     private void Update()
@@ -50,6 +56,7 @@ public class PuzzleObject : MonoBehaviour
     public class Target
     {
         [SerializeField] public Vector3 targetPosition;
+        [SerializeField] public Vector3 adjustedTargetPosition;
         [SerializeField] public Quaternion targetRotation;
     }
 
@@ -69,7 +76,12 @@ public class PuzzleObject : MonoBehaviour
 
         for (int x = 0; x < targets.Length; x++)
         {
-            if ((this.transform.position - targets[x].targetPosition).sqrMagnitude < allowedErrorMarginPosition &&
+
+            //POS displacement - adjust target
+            targets[x].adjustedTargetPosition.z = displacement.z + targets[x].targetPosition.z;
+
+
+            if ((this.transform.position - targets[x].adjustedTargetPosition).sqrMagnitude < allowedErrorMarginPosition &&
             Quaternion.Angle(this.transform.rotation.normalized, targets[x].targetRotation) < allowedErrorMarginRotation)
             {
                 if (debugColor)

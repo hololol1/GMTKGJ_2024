@@ -20,6 +20,12 @@ public class PuzzleMover : MonoBehaviour
     private Vector3 startPosition;
     private Vector3 objPosition;
 
+    [SerializeField] Collider movementSpace;
+    [SerializeField] Collider movementSpaceTargetNow;
+
+    public bool selected = false;
+
+    public LayerMask layerMask;
 
 
     Rigidbody rb;
@@ -41,18 +47,40 @@ public class PuzzleMover : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //SelectObject();
         MoveObject();
+        //DragObject();
     }
 
-
+    private void FixedUpdate()
+    {
+        //DragObject();
+    }
 
     void OnMouseDrag()
     {
-        /*
+        if (selected)
+        {
+            DragObject();
+        }
+
 
         /*
+                Vector3 mousePosition = new Vector3(Input.mousePosition.x, Input.mousePosition.y, -Camera.main.transform.position.z + transform.position.z);
+        mousePosition = Input.mousePosition;
+        Vector3 objPosition = Camera.main.ScreenToWorldPoint(mousePosition);
+        Ray objRayPosition = Camera.main.ScreenPointToRay(mousePosition);
 
-                Vector3 mousePosition = Input.mousePosition;
+        if (plane.Raycast(objRayPosition, out float distance))
+        {
+            objPosition = objRayPosition.GetPoint(distance);
+            objPosition = Vector3.ClampMagnitude(objPosition, 100);
+        }
+        //objPosition.z = startPosition.z;
+        transform.position = objPosition;
+        /*
+
+        Vector3 mousePosition = Input.mousePosition;
         Ray objRayPosition = Camera.main.ScreenPointToRay(mousePosition);
         if (Physics.Raycast(objRayPosition, out RaycastHit hitData))
         {
@@ -73,19 +101,24 @@ public class PuzzleMover : MonoBehaviour
         transform.position = objPosition;
         */
 
-        Vector3 mousePosition = new Vector3(Input.mousePosition.x, Input.mousePosition.y, -Camera.main.transform.position.z + transform.position.z);
-        mousePosition = Input.mousePosition;
-        Vector3 objPosition = Camera.main.ScreenToWorldPoint(mousePosition);
+        /*
+        Vector3 mousePosition = Input.mousePosition;
         Ray objRayPosition = Camera.main.ScreenPointToRay(mousePosition);
-
-        if (plane.Raycast(objRayPosition, out float distance))
+        if (Physics.Raycast(objRayPosition, out RaycastHit hitData))
         {
-            objPosition = objRayPosition.GetPoint(distance);
-            objPosition = Vector3.ClampMagnitude(objPosition, 100);
+            Debug.Log(hitData);
+            objPosition = hitData.point;
+            if (hitData.collider == movementSpace)
+            {
+                objPosition = hitData.point;
+            }
+
+
         }
+        //objPosition = Vector3.ClampMagnitude(objPosition, 100);
         //objPosition.z = startPosition.z;
         transform.position = objPosition;
-
+        */
         dragging = true;
        
 
@@ -93,8 +126,28 @@ public class PuzzleMover : MonoBehaviour
 
     public void MoveObject()
     {
+        if (Input.GetMouseButtonDown(1) || Input.GetMouseButtonDown(0))
+        {
+            SelectObject();
+            //Stop Moving/Translating
+            rb.velocity = Vector3.zero;
+
+            //Stop rotating
+            rb.angularVelocity = Vector3.zero;
+        }
+
+        if (selected)
+        {
+            
+        
+
+        //DragObject();
+
+
         if (Input.GetMouseButtonDown(0))
         {
+            //GameManager.instance.selectedObject.TryGetComponent<>
+            //DragObject();
             dragging = true;
         }
 
@@ -103,15 +156,7 @@ public class PuzzleMover : MonoBehaviour
             dragging = false;
         }
 
-        if (Input.GetMouseButtonDown(1)|| Input.GetMouseButtonDown(0))
-        {
 
-            //Stop Moving/Translating
-            rb.velocity = Vector3.zero;
-
-            //Stop rotating
-            rb.angularVelocity = Vector3.zero;
-        }
 
         if (Input.GetMouseButtonDown(1))
         {
@@ -143,12 +188,74 @@ public class PuzzleMover : MonoBehaviour
             {
                 transform.Rotate(Vector3.right, mouseMovementY * rotationSpeed * Time.deltaTime, Space.World);
             }
-
-            
- 
-
-
+            }
         }
 
     } 
+
+    public void SelectObject()
+    {
+
+        //Collider col = this.transform.GetComponent<Collider>();
+        //col.enabled = false;
+        Vector3 mousePosition = Input.mousePosition;
+        Ray objRayPosition = Camera.main.ScreenPointToRay(mousePosition);
+        if (Physics.Raycast(objRayPosition, out RaycastHit hitData))
+        {
+            if(hitData.collider == transform.GetComponent<Collider>())
+            {
+
+                if (GameManager.instance.selectedObject != null)
+                {
+                    if (GameManager.instance.selectedObject.TryGetComponent<PuzzleMover>(out PuzzleMover oldSelection))
+                    {
+                        oldSelection.selected = false;                      
+                        GameManager.instance.selectedObjectCollider.enabled = true;
+                    }
+                }
+                GameManager.instance.selectedObject = this.transform;
+                GameManager.instance.selectedObjectCollider= this.transform.GetComponent<Collider>();
+
+                this.selected = true;
+
+            }
+        }
+
+    }
+
+
+    private void DragObject()
+    {
+        GameManager.instance.selectedObjectCollider.enabled = false;
+        Debug.Log("tryingDrag");
+        
+        //col.enabled = false;
+
+        Vector3 mousePosition = Input.mousePosition;
+        Ray objRayPosition = Camera.main.ScreenPointToRay(mousePosition);
+    
+
+        //if (Physics.Raycast(objRayPosition, out RaycastHit hitData, layerMask))
+        if (Physics.Raycast(objRayPosition, out RaycastHit hitData))
+        {
+            
+            
+            Debug.Log(hitData.transform.gameObject);
+            Debug.Log("onjpos"+ hitData.point);
+            //objPosition = hitData.point;
+            if (hitData.collider.tag == "Target")
+            {
+                objPosition = hitData.point;
+                //objPosition = hitData.point;
+            }
+
+        }
+        //objPosition = Vector3.ClampMagnitude(objPosition, 100);
+        //objPosition.z = startPosition.z;
+        transform.position = objPosition;
+        //transform.position = new Vector3(objPosition.x, objPosition.y, objPosition.z);
+        Debug.Log(transform.position);
+        GameManager.instance.selectedObjectCollider.enabled = true;
+        //col.enabled = true;
+    }
 }
