@@ -87,6 +87,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: PuzzlePieceBaseQuestion
       objectReference: {fileID: 0}
+    - target: {fileID: 2664164840911906184, guid: 6f485efabbedbd346a008a86ae18062f,
+        type: 3}
+      propertyPath: dragAmount
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 4223728262708394272, guid: 6f485efabbedbd346a008a86ae18062f,
         type: 3}
       propertyPath: m_Enabled
@@ -141,6 +146,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 284.24402
+      objectReference: {fileID: 0}
+    - target: {fileID: 7739905184605696418, guid: 6f485efabbedbd346a008a86ae18062f,
+        type: 3}
+      propertyPath: allowedErrorMarginRotation
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 7739905184605696418, guid: 6f485efabbedbd346a008a86ae18062f,
+        type: 3}
+      propertyPath: targets.Array.data[0].targetPosition.z
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
