@@ -11,6 +11,7 @@ public class MainMenuButtons : MonoBehaviour
 	private AudioMixer audioMixer;
 
 	public Slider audioSlider;
+	public GameObject mainMenu;
 
 
 	private void Start()
@@ -31,10 +32,11 @@ public class MainMenuButtons : MonoBehaviour
 	public void StartGame()
 	{
 		StartCoroutine(DelaySceneLoad());
+		mainMenu.SetActive(false);
 	}
 	IEnumerator DelaySceneLoad()
 	{
-		yield return new WaitForSeconds(0.1f);
+		yield return new WaitForSeconds(1f);
 		SceneManager.LoadScene("MainGame", LoadSceneMode.Single);
 	}
 
