@@ -157,6 +157,11 @@ PrefabInstance:
       objectReference: {fileID: 1381915381}
     - target: {fileID: 3639674303837361535, guid: f8c1c5df41cb3e349af3614b7196ea05,
         type: 3}
+      propertyPath: puzzleCompleteAlternateUI
+      value: 
+      objectReference: {fileID: 592465713}
+    - target: {fileID: 3639674303837361535, guid: f8c1c5df41cb3e349af3614b7196ea05,
+        type: 3}
       propertyPath: placedPuzzlePieces.Array.data[0]
       value: 
       objectReference: {fileID: 0}
