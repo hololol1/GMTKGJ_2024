@@ -12,6 +12,7 @@ public class MainMenuButtons : MonoBehaviour
 
 	public Slider audioSlider;
 
+
 	private void Start()
 	{
 		float value;
@@ -39,7 +40,15 @@ public class MainMenuButtons : MonoBehaviour
 
 	public void SetVolume()
 	{
-		audioMixer.SetFloat("Master", Mathf.Log10(audioSlider.value) * 20);
+
+		if (audioSlider.value == 0)
+		{
+			audioMixer.SetFloat("Master", -80);
+		}
+		else
+		{
+			audioMixer.SetFloat("Master", Mathf.Log10(audioSlider.value) * 20);
+		}
 	}
 
 	public float GetMasterLevel()

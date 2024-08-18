@@ -24,7 +24,7 @@ public class InGameMenu : MonoBehaviour
 	IEnumerator DelaySceneLoadMainGame1()
 	{
 		yield return new WaitForSeconds(0.1f);
-		SceneManager.LoadScene("MainGameLevel1", LoadSceneMode.Single);
+		SceneManager.LoadScene("DangerScene", LoadSceneMode.Single);
 	}
 
 	public void LoadMainGame2()
