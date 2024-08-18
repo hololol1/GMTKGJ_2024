@@ -109,9 +109,12 @@ public class PuzzleObject : MonoBehaviour
     {
         bool isTrue = false;
 
+
         for (int x = 0; x < targets.Length; x++)
         {
-            if ((this.transform.position - targets[x].targetPosition).sqrMagnitude < allowedErrorMarginPosition)
+            targets[x].adjustedTargetPosition.z = displacement.z + targets[x].targetPosition.z;
+
+            if ((this.transform.position - targets[x].adjustedTargetPosition).sqrMagnitude < allowedErrorMarginPosition)
             {
                 isTrue = true;
             }

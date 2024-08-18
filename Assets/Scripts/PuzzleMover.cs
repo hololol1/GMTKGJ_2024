@@ -13,7 +13,7 @@ public class PuzzleMover : MonoBehaviour
 
     bool dragging = false;
     bool rotating = false;
-
+    public bool pauseAllMovement = false;
 
     private float startMousePositionX;
     private float startMousePositionY;
@@ -58,7 +58,15 @@ public class PuzzleMover : MonoBehaviour
     void Update()
     {
         //SelectObject();
-        MoveObject();
+        if (pauseAllMovement)
+        {
+            PauseMovement();
+        }
+        else
+        {
+            MoveObject();
+        }
+
         //Rotation();
         //DragObject();
     }
@@ -246,7 +254,14 @@ public class PuzzleMover : MonoBehaviour
         }
     } 
 
+    public void PauseMovement()
+    {
+        //Stop Moving/Translating
+        rb.velocity = Vector3.zero;
 
+        //Stop rotating
+        rb.angularVelocity = Vector3.zero;
+    }
     public void Rotation()
     {
 

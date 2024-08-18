@@ -13,6 +13,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject puzzleContainer;
     [SerializeField] bool currentPuzzleComplete = false;
     [SerializeField] public List<GameObject> placedPuzzlePieces = new List<GameObject>();
+    [SerializeField] public List<GameObject> placedAdditionalObjects = new List<GameObject>();
+
+    [SerializeField] GameObject puzzleCompleteUI;
 
     public Transform selectedObject;
     public Collider selectedObjectCollider;
@@ -31,6 +34,17 @@ public class GameManager : MonoBehaviour
         instance = this;
         //End Singleton
         #endregion Singleton
+
+        if (puzzleContainer == null)
+        {
+            Debug.LogWarning("GameManager missing Puzzle Container!");
+        }
+
+        if (puzzleCompleteUI == null)
+        {
+            Debug.LogWarning("GameManager missing Puzzle Complete UI!");
+        }
+
     }
 
         // Start is called before the first frame update
@@ -47,8 +61,21 @@ public class GameManager : MonoBehaviour
         currentPuzzleComplete = CheckIfComplete();
         if (currentPuzzleComplete)
         {
-            StartCoroutine(WaitWinTimer(2));
-           // NextPuzzle();
+            foreach (GameObject puzzlePiece in placedPuzzlePieces)
+            {
+                puzzlePiece.GetComponent<PuzzleMover>().pauseAllMovement = true;
+            }
+
+
+            //open UI
+            if (puzzleCompleteUI != null)
+            {
+                puzzleCompleteUI.SetActive(true);
+            }
+            else
+            {
+                StartCoroutine(WaitWinTimer(3));
+            }
         }
     }
 
@@ -57,7 +84,7 @@ public class GameManager : MonoBehaviour
     {
         [SerializeField] public GameObject[] puzzlePieces;
 
-
+        [SerializeField] public GameObject[] AdditionalObjects;
     }
 
     [SerializeField]
@@ -77,32 +104,42 @@ public class GameManager : MonoBehaviour
         }
         else { 
 
-
+        //destroy old puzzle
         foreach (GameObject puzzlePiece in placedPuzzlePieces)
         {
             Destroy(puzzlePiece);
 
         }
-        placedPuzzlePieces.Clear();
-
-        //initalize Puzzle
-        for (int x = 0; x < puzzle[puzzleNumber].puzzlePieces.Length; x++)
-        {
-            placedPuzzlePieces.Add(Instantiate(puzzle[puzzleNumber].puzzlePieces[x], new Vector3(puzzle[puzzleNumber].puzzlePieces[x].transform.position.x, puzzle[puzzleNumber].puzzlePieces[x].transform.position.y, puzzle[puzzleNumber].puzzlePieces[x].transform.position.z + target.position.z + puzzle[puzzleNumber].puzzlePieces[x].GetComponent<PuzzleObject>().targets[0].targetPosition.z), puzzle[puzzleNumber].puzzlePieces[x].transform.rotation, puzzleContainer.transform));
-
-
-
-            foreach (GameObject puzzlePiece in placedPuzzlePieces)
+            foreach (GameObject additionalObject in placedAdditionalObjects)
             {
-               // puzzlePiece.transform.position = new Vector3 (puzzlePiece.transform.position.x, puzzlePiece.transform.position.y, target.position.z + puzzlePiece.transform.position.z);
-            }
-            //Instantiate(puzzle[puzzleNumber].puzzlePieces[x],puzzleContainer.transform);
+                Destroy(additionalObject);
 
-            //put this into a list
-        }
-        currentPuzzle = puzzleNumber;
+            }
+
+            placedAdditionalObjects.Clear();
+            placedPuzzlePieces.Clear();
+
+            //initalize Puzzle
+
+            for (int x = 0; x < puzzle[puzzleNumber].puzzlePieces.Length; x++)
+            {
+                placedPuzzlePieces.Add(Instantiate(puzzle[puzzleNumber].puzzlePieces[x], new Vector3(puzzle[puzzleNumber].puzzlePieces[x].transform.position.x, puzzle[puzzleNumber].puzzlePieces[x].transform.position.y, puzzle[puzzleNumber].puzzlePieces[x].transform.position.z + target.position.z + puzzle[puzzleNumber].puzzlePieces[x].GetComponent<PuzzleObject>().targets[0].targetPosition.z), puzzle[puzzleNumber].puzzlePieces[x].transform.rotation, puzzleContainer.transform));
+
+            }
+
+            for (int x = 0; x < puzzle[puzzleNumber].AdditionalObjects.Length; x++)
+            {
+                placedAdditionalObjects.Add(Instantiate(puzzle[puzzleNumber].AdditionalObjects[x], GameManager.instance.transform));
+
+            }
+            currentPuzzle = puzzleNumber;
             //Instantiate(puzzle[puzzleNumber].
 
+        }
+
+        foreach (GameObject puzzlePiece in placedPuzzlePieces)
+        {
+            puzzlePiece.GetComponent<PuzzleMover>().pauseAllMovement = false;
         }
     }
 

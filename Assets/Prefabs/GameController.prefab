@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6728627485575163271}
+  - component: {fileID: 3639674303837361535}
   m_Layer: 0
   m_Name: GameController
   m_TagString: Untagged
@@ -28,6 +29,65 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 3140493514359313598}
   m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3639674303837361535
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 608713914573113286}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71faa12247e2f5c4c979d985e9618d93, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentPuzzle: 0
+  puzzleContainer: {fileID: 2089902354257487868}
+  currentPuzzleComplete: 0
+  placedPuzzlePieces:
+  - {fileID: 0}
+  selectedObject: {fileID: 0}
+  selectedObjectCollider: {fileID: 0}
+  target: {fileID: 0}
+  puzzle:
+  - puzzlePieces:
+    - {fileID: 862402571543478815, guid: d3d2aad4f43ba794993285c16dea543e, type: 3}
+  - puzzlePieces:
+    - {fileID: 2319090826822999622, guid: 6f485efabbedbd346a008a86ae18062f, type: 3}
+  - puzzlePieces:
+    - {fileID: 2319090826822999622, guid: 6f485efabbedbd346a008a86ae18062f, type: 3}
+--- !u!1 &2089902354257487868
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3140493514359313598}
+  m_Layer: 0
+  m_Name: PuzzleContainer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3140493514359313598
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2089902354257487868}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6728627485575163271}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
