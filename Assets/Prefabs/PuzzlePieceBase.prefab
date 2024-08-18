@@ -100,17 +100,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   allowedErrorMarginPosition: 0.2
-  allowedErrorMarginRotation: 5
+  allowedErrorMarginRotation: 1
   atTargetPosition: 0
   atTargetRotation: 0
   atTarget: 0
   debugColor: 1
   target: {fileID: 0}
   displacement: {x: 0, y: 0, z: 0}
+  hasAlternateSolution: 0
   targets:
   - targetPosition: {x: 0, y: 0, z: 0}
+    targetRotationVector: {x: 0, y: 0, z: 0}
     adjustedTargetPosition: {x: 0, y: 0, z: 0}
     targetRotation: {x: 0, y: 0, z: 0, w: 1}
+  alternateTargets:
+  - targetPosition: {x: 0, y: 0, z: 0}
+    targetRotationVector: {x: 0, y: 0, z: 0}
+    adjustedTargetPosition: {x: 0, y: 0, z: 0}
+    targetRotation: {x: 0, y: 0, z: 0, w: 0}
 --- !u!114 &2664164840911906184
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -127,6 +134,7 @@ MonoBehaviour:
   rotationSpeed: 700
   movementSpeed: 1
   dragAmount: 80000
+  pauseAllMovement: 0
   movementSpace: {fileID: 0}
   movementSpaceTargetNow: {fileID: 0}
   selected: 0
@@ -136,6 +144,7 @@ MonoBehaviour:
   layerMaskSelf:
     serializedVersion: 2
     m_Bits: 128
+  displacement: {x: 0, y: 0, z: 0}
 --- !u!65 &1385470824750211323
 BoxCollider:
   m_ObjectHideFlags: 0
