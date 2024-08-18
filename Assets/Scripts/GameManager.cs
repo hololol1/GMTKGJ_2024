@@ -80,7 +80,12 @@ public class GameManager : MonoBehaviour
                 //open UI
                 if (puzzleCompleteUI != null)
                 {
-                    puzzleCompleteUI.SetActive(true);
+                    if(puzzleCompleteUI.activeSelf == false)
+                    {
+                        StartCoroutine(WaitWinTimerMenu(1));
+                    }
+                    //puzzleCompleteUI.SetActive(true);
+
                 }
                 else
                 {
@@ -186,6 +191,9 @@ public class GameManager : MonoBehaviour
         {
             puzzleCompleteUI.SetActive(false);
         }
+        puzzleCompleteUI.SetActive(false);
+        Debug.Log("deactivated UI");
+
     }
 
     public bool CheckIfComplete()
@@ -247,6 +255,18 @@ public class GameManager : MonoBehaviour
         //here is the code after
         //print(Time.time);
         NextPuzzle();
+    }
+
+    IEnumerator WaitWinTimerMenu(int waitTime)
+    {
+        //here is the code before
+        //print(Time.time);
+        yield return new WaitForSeconds(waitTime);
+        //here is the code after
+        //print(Time.time);
+        Debug.Log("activated UI");
+        puzzleCompleteUI.SetActive(true);
+        //NextPuzzle();
     }
 
 
