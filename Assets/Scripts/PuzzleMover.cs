@@ -39,7 +39,7 @@ public class PuzzleMover : MonoBehaviour
 
     Rigidbody rb;
 
-
+    [SerializeField] Vector3 displacement;
 
     // Start is called before the first frame update
     void Start()
@@ -51,6 +51,7 @@ public class PuzzleMover : MonoBehaviour
         {
             //plane = new Plane(Vector3.right, startPosition.x);           
         }
+        displacement = new Vector3(0, 0, this.GetComponent<PuzzleObject>().targets[0].targetPosition.z);
     }
 
     // Update is called once per frame
@@ -357,6 +358,10 @@ public class PuzzleMover : MonoBehaviour
             {
                 objPosition = hitData.point;
                 //objPosition = hitData.point;
+
+
+                //adjust object pos with displacement stemming from the target z
+                //objPosition = displacement.z + targets[x].targetPosition.z;
             }
 
         }
@@ -366,7 +371,7 @@ public class PuzzleMover : MonoBehaviour
 
         //POS!
 
-        transform.position = objPosition;
+        transform.position = objPosition+displacement;
 
 
         //transform.position = new Vector3(objPosition.x, objPosition.y, objPosition.z);

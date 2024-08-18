@@ -88,11 +88,13 @@ public class GameManager : MonoBehaviour
         //initalize Puzzle
         for (int x = 0; x < puzzle[puzzleNumber].puzzlePieces.Length; x++)
         {
-            placedPuzzlePieces.Add(Instantiate(puzzle[puzzleNumber].puzzlePieces[x], puzzleContainer.transform));
+            placedPuzzlePieces.Add(Instantiate(puzzle[puzzleNumber].puzzlePieces[x], new Vector3(puzzle[puzzleNumber].puzzlePieces[x].transform.position.x, puzzle[puzzleNumber].puzzlePieces[x].transform.position.y, puzzle[puzzleNumber].puzzlePieces[x].transform.position.z + target.position.z + puzzle[puzzleNumber].puzzlePieces[x].GetComponent<PuzzleObject>().targets[0].targetPosition.z), puzzle[puzzleNumber].puzzlePieces[x].transform.rotation, puzzleContainer.transform));
+
+
 
             foreach (GameObject puzzlePiece in placedPuzzlePieces)
             {
-                puzzlePiece.transform.position = new Vector3 (puzzlePiece.transform.position.x, puzzlePiece.transform.position.y, target.position.z);
+               // puzzlePiece.transform.position = new Vector3 (puzzlePiece.transform.position.x, puzzlePiece.transform.position.y, target.position.z + puzzlePiece.transform.position.z);
             }
             //Instantiate(puzzle[puzzleNumber].puzzlePieces[x],puzzleContainer.transform);
 
