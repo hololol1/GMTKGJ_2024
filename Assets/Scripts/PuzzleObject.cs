@@ -57,9 +57,15 @@ public class PuzzleObject : MonoBehaviour
     public class Target
     {
         [SerializeField] public Vector3 targetPosition;
+        [SerializeField] public Vector3 targetRotationVector;
+
+        [Header("These auto adjust so don't worry")]
+        //public string TheseAutoAdjustDontWorry;
+        [Space]
         [SerializeField] public Vector3 adjustedTargetPosition;
         [SerializeField] public Quaternion targetRotation;
-       // [SerializeField] public Vector3 targetRotationVector;
+
+  
 
     }
 
@@ -90,6 +96,9 @@ public class PuzzleObject : MonoBehaviour
             //POS displacement - adjust target
             //targets[x].adjustedTargetPosition.z = displacement.z + targets[x].targetPosition.z;
             targets[x].adjustedTargetPosition = displacement + targets[x].targetPosition;
+            targets[x].targetRotation = Quaternion.Euler(targets[x].targetRotationVector.x, targets[x].targetRotationVector.y, targets[x].targetRotationVector.z);
+
+
 
             if ((this.transform.position - targets[x].adjustedTargetPosition).sqrMagnitude < allowedErrorMarginPosition &&
             Quaternion.Angle(this.transform.rotation.normalized, targets[x].targetRotation) < allowedErrorMarginRotation)
@@ -164,6 +173,7 @@ public class PuzzleObject : MonoBehaviour
                 //POS displacement - adjust target
                 //alternateTargets[x].adjustedTargetPosition.z = displacement.z + alternateTargets[x].targetPosition.z;
                 alternateTargets[x].adjustedTargetPosition = displacement + alternateTargets[x].targetPosition;
+                alternateTargets[x].targetRotation = Quaternion.Euler(alternateTargets[x].targetRotationVector.x, alternateTargets[x].targetRotationVector.y, alternateTargets[x].targetRotationVector.z);
 
 
                 Debug.Log(Quaternion.Angle(this.transform.rotation.normalized, alternateTargets[x].targetRotation.normalized));
