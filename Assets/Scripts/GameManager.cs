@@ -47,7 +47,8 @@ public class GameManager : MonoBehaviour
         currentPuzzleComplete = CheckIfComplete();
         if (currentPuzzleComplete)
         {
-            NextPuzzle();
+            StartCoroutine(WaitWinTimer(2));
+           // NextPuzzle();
         }
     }
 
@@ -141,5 +142,16 @@ public class GameManager : MonoBehaviour
         */
         return solved;
     }
+
+    IEnumerator WaitWinTimer (int waitTime)
+    {
+        //here is the code before
+        print(Time.time);
+        yield return new WaitForSeconds(waitTime);
+        //here is the code after
+        print(Time.time);
+        NextPuzzle();
+    }
+
 
 }

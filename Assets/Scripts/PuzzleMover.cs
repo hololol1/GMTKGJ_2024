@@ -35,6 +35,8 @@ public class PuzzleMover : MonoBehaviour
 
     public LayerMask layerMask;
 
+    public LayerMask layerMaskSelf;
+
     Rigidbody rb;
 
 
@@ -141,73 +143,80 @@ public class PuzzleMover : MonoBehaviour
         {
             SelectObject();
 
-            //Stop Moving/Translating
-            rb.velocity = Vector3.zero;
+            //stop all movement when the mouse is clicked and an this object selected
+            if (selected)
+            {
+                //Stop Moving/Translating
+                rb.velocity = Vector3.zero;
 
-            //Stop rotating
-            rb.angularVelocity = Vector3.zero;
+                //Stop rotating
+                rb.angularVelocity = Vector3.zero;
+            }
         }
-
-        //if this object is the selected one
-        if (selected)
-        {         
-        
-        //DragObject();
-
 
         if (Input.GetMouseButtonDown(0))
         {
-            //GameManager.instance.selectedObject.TryGetComponent<>
+            SelectObject();
+            //when left mouse down move object
             dragging = true;
         }
 
         if (Input.GetMouseButtonUp(0))
         {
+
+            //when left mouse up no longer move object
             dragging = false;
         }
 
-
-
         if (Input.GetMouseButtonDown(1))
         {
-                rotating = true;
-                
+            SelectObject();
+            //when right down start rotating
+            rotating = true;
 
-                //save starting mouse pos
-                //startMousePositionX = Input.mousePosition.x;
-                //startMousePositionY = Input.mousePosition.y;
-                //startMousePosition = Input.mousePosition;
-
-            }
+            #region OldCode
+            //save starting mouse pos
+            //startMousePositionX = Input.mousePosition.x;
+            //startMousePositionY = Input.mousePosition.y;
+            //startMousePosition = Input.mousePosition;
+            #endregion OldCode
+        }
 
         if (Input.GetMouseButtonUp(1))
         {
+            //no longer rotating manually
             rotating = false;
+            //apply rotation according to prior movement amount
+            rb.AddTorque((Input.GetAxis("Mouse Y") * dragAmount * Time.deltaTime), -(Input.GetAxis("Mouse X") * dragAmount * Time.deltaTime), 0);
 
-                //Vector3 mouseMovDistance = (startMousePosition - Input.mousePosition);
-                //mouseMovDistance = new Vector3(mouseMovDistance.y, mouseMovDistance.x, mouseMovDistance.z);
-                //compare starting mouse pos to current pos to determine amount of rotation
-                // float mouseMovement = Vector3.Distance(startMousePosition, Input.mousePosition);
+            #region OldCode
 
-                rb.AddTorque((Input.GetAxis("Mouse Y") * dragAmount * Time.deltaTime), -(Input.GetAxis("Mouse X") * dragAmount * Time.deltaTime), 0);
+            //Vector3 mouseMovDistance = (startMousePosition - Input.mousePosition);
+            //mouseMovDistance = new Vector3(mouseMovDistance.y, mouseMovDistance.x, mouseMovDistance.z);
+            //compare starting mouse pos to current pos to determine amount of rotation
+            // float mouseMovement = Vector3.Distance(startMousePosition, Input.mousePosition);
 
-                //rb.AddTorque(mouseMovDistance * dragAmount * Time.deltaTime);
-               // rb.AddTorque(Vector3.down * mouseMovementX * dragAmount * Time.deltaTime);
+            //rb.AddTorque(mouseMovDistance * dragAmount * Time.deltaTime);
+            // rb.AddTorque(Vector3.down * mouseMovementX * dragAmount * Time.deltaTime);
             //rb.AddTorque(Vector3.right * mouseMovementY * dragAmount * Time.deltaTime);
-
 
             //mouseMovementX = 0;
             //mouseMovementY = 0;
             //startMousePositionX = 0;
             //startMousePositionY = 0;
-        
+
+            #endregion OldCode
 
         }
 
-        if (rotating)
+        //as long as this object is selected
+        if (selected)
         {
-                Rotation();
 
+            //if rotating do rotation
+            if (rotating)
+            {
+                Rotation();
                 /*
                             float currentMousePositionX = Input.mousePosition.x;
                             float currentMousePositionY = Input.mousePosition.y;
@@ -225,16 +234,15 @@ public class PuzzleMover : MonoBehaviour
                                 transform.Rotate(Vector3.right, mouseMovementY * rotationSpeed * Time.deltaTime, Space.World);
                             }
                 */
+            }
 
+            //if dragging move object
+            if (dragging)
+            {
+                DragObject();
             }
 
         }
-
-        if (dragging)
-        {
-            DragObject();
-        }
-
     } 
 
 
@@ -267,38 +275,69 @@ public class PuzzleMover : MonoBehaviour
     public void SelectObject()
     {
 
-        //Collider col = this.transform.GetComponent<Collider>();
-        //col.enabled = false;
         Vector3 mousePosition = Input.mousePosition;
         Ray objRayPosition = Camera.main.ScreenPointToRay(mousePosition);
-        if (Physics.Raycast(objRayPosition, out RaycastHit hitData))
-        {
-            if(hitData.collider == transform.GetComponent<Collider>())
-            {
 
+        //raycast on selectable layer
+        if (Physics.Raycast(objRayPosition, out RaycastHit hitData, Mathf.Infinity, layerMaskSelf, QueryTriggerInteraction.Collide))
+        {
+            if (hitData.transform == transform)              
+            {
+                Debug.Log("Selection Raycast hit " + hitData.transform);
+                Debug.Log("trying to select");
+                //deselect old
                 if (GameManager.instance.selectedObject != null)
                 {
                     if (GameManager.instance.selectedObject.TryGetComponent<PuzzleMover>(out PuzzleMover oldSelection))
                     {
                         oldSelection.selected = false;                      
                         GameManager.instance.selectedObjectCollider.enabled = true;
+
                     }
                 }
+                //select new
+                Debug.Log("Selected " + transform);
                 GameManager.instance.selectedObject = this.transform;
-                GameManager.instance.selectedObjectCollider= this.transform.GetComponent<Collider>();
+                GameManager.instance.selectedObjectCollider = this.transform.GetComponent<Collider>();
 
                 this.selected = true;
 
             }
+            //if nothing to select
+            else
+            {
+               if (selected)
+                {
+                    Debug.Log("Deselcted " + transform);
+                    GameManager.instance.selectedObjectCollider.enabled = true;
+                    GameManager.instance.selectedObject = null;
+                    selected = false;
+                    this.transform.GetComponent<Collider>();
+                }
+            }
         }
-
+        else
+        {
+            if (selected)
+            {
+                Debug.Log("Deselcted " + transform);
+                GameManager.instance.selectedObjectCollider.enabled = true;
+                GameManager.instance.selectedObject = null;
+                selected = false;
+                this.transform.GetComponent<Collider>();
+            }
+        }
     }
 
+    private void DeselectObject()
+    {
+
+    }
 
     private void DragObject()
     {
         GameManager.instance.selectedObjectCollider.enabled = false;
-        Debug.Log("tryingDrag");
+        //Debug.Log("tryingDrag");
         
         //col.enabled = false;
 
@@ -307,12 +346,12 @@ public class PuzzleMover : MonoBehaviour
     
 
         //if (Physics.Raycast(objRayPosition, out RaycastHit hitData, layerMask))
-        if (Physics.Raycast(objRayPosition, out RaycastHit hitData))
+        if (Physics.Raycast(objRayPosition, out RaycastHit hitData, Mathf.Infinity,layerMask, QueryTriggerInteraction.Collide))
         {
             
             
-            Debug.Log(hitData.transform.gameObject);
-            Debug.Log("onjpos"+ hitData.point);
+            //Debug.Log(hitData.transform.gameObject);
+            //Debug.Log("onjpos"+ hitData.point);
             //objPosition = hitData.point;
             if (hitData.collider.tag == "Target")
             {
@@ -331,7 +370,7 @@ public class PuzzleMover : MonoBehaviour
 
 
         //transform.position = new Vector3(objPosition.x, objPosition.y, objPosition.z);
-        Debug.Log(transform.position);
+        //Debug.Log(transform.position);
         GameManager.instance.selectedObjectCollider.enabled = true;
         //col.enabled = true;
     }

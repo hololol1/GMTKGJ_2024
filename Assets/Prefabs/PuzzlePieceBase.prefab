@@ -132,7 +132,10 @@ MonoBehaviour:
   selected: 0
   layerMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
+  layerMaskSelf:
+    serializedVersion: 2
+    m_Bits: 128
 --- !u!65 &1385470824750211323
 BoxCollider:
   m_ObjectHideFlags: 0

@@ -585,6 +585,8 @@ MonoBehaviour:
   puzzle:
   - puzzlePieces:
     - {fileID: 862402571543478815, guid: d3d2aad4f43ba794993285c16dea543e, type: 3}
+    - {fileID: 862402571543478815, guid: d3d2aad4f43ba794993285c16dea543e, type: 3}
+    - {fileID: 2319090826822999622, guid: 6f485efabbedbd346a008a86ae18062f, type: 3}
   - puzzlePieces:
     - {fileID: 2319090826822999622, guid: 6f485efabbedbd346a008a86ae18062f, type: 3}
   - puzzlePieces:
