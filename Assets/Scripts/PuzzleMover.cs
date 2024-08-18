@@ -299,8 +299,8 @@ public class PuzzleMover : MonoBehaviour
         {
             if (hitData.transform == transform)              
             {
-                Debug.Log("Selection Raycast hit " + hitData.transform);
-                Debug.Log("trying to select");
+                //Debug.Log("Selection Raycast hit " + hitData.transform);
+                //Debug.Log("trying to select");
                 //deselect old
                 if (GameManager.instance.selectedObject != null)
                 {
@@ -312,7 +312,7 @@ public class PuzzleMover : MonoBehaviour
                     }
                 }
                 //select new
-                Debug.Log("Selected " + transform);
+                //Debug.Log("Selected " + transform);
                 GameManager.instance.selectedObject = this.transform;
                 GameManager.instance.selectedObjectCollider = this.transform.GetComponent<Collider>();
 

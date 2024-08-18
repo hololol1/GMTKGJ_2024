@@ -32,6 +32,7 @@ public class PuzzleObject : MonoBehaviour
 
     [SerializeField] Vector3 displacement = new Vector3 (0,0,0);
 
+    [SerializeField] public bool hasAlternateSolution;
 
 
     //check if the object is at the pos it's supposed to be
@@ -58,10 +59,19 @@ public class PuzzleObject : MonoBehaviour
         [SerializeField] public Vector3 targetPosition;
         [SerializeField] public Vector3 adjustedTargetPosition;
         [SerializeField] public Quaternion targetRotation;
+       // [SerializeField] public Vector3 targetRotationVector;
+
     }
 
     [SerializeField]
     public Target[] targets =
+    {
+        new Target()
+    };
+
+
+    [SerializeField]
+    public Target[] alternateTargets =
     {
         new Target()
     };
@@ -78,8 +88,8 @@ public class PuzzleObject : MonoBehaviour
         {
 
             //POS displacement - adjust target
-            targets[x].adjustedTargetPosition.z = displacement.z + targets[x].targetPosition.z;
-
+            //targets[x].adjustedTargetPosition.z = displacement.z + targets[x].targetPosition.z;
+            targets[x].adjustedTargetPosition = displacement + targets[x].targetPosition;
 
             if ((this.transform.position - targets[x].adjustedTargetPosition).sqrMagnitude < allowedErrorMarginPosition &&
             Quaternion.Angle(this.transform.rotation.normalized, targets[x].targetRotation) < allowedErrorMarginRotation)
@@ -139,6 +149,50 @@ public class PuzzleObject : MonoBehaviour
         return isTrue;
     }
 
+
+    public bool CheckIfAtAlternateTarget()
+    {
+        bool isTrue = false;
+
+        if (hasAlternateSolution)
+        {
+            
+            for (int x = 0; x < alternateTargets.Length; x++)
+            {
+
+
+                //POS displacement - adjust target
+                //alternateTargets[x].adjustedTargetPosition.z = displacement.z + alternateTargets[x].targetPosition.z;
+                alternateTargets[x].adjustedTargetPosition = displacement + alternateTargets[x].targetPosition;
+
+
+                Debug.Log(Quaternion.Angle(this.transform.rotation.normalized, alternateTargets[x].targetRotation.normalized));
+
+            if ((this.transform.position - alternateTargets[x].adjustedTargetPosition).sqrMagnitude < allowedErrorMarginPosition &&
+                Quaternion.Angle(this.transform.rotation.normalized, alternateTargets[x].targetRotation) < allowedErrorMarginRotation)
+                {
+                    if (debugColor)
+                    {
+                        this.GetComponent<Renderer>().material.color = Color.red;
+                    }
+
+                    isTrue = true;
+                }
+
+            }
+            if (!isTrue)
+            {
+                if (debugColor)
+                {
+                    this.GetComponent<Renderer>().material.color = Color.gray;
+                }
+            }
+
+        }
+
+        return isTrue;
+
+    }
 
 
 }

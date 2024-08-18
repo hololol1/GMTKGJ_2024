@@ -16,9 +16,12 @@ public class GameManager : MonoBehaviour
     [SerializeField] public List<GameObject> placedAdditionalObjects = new List<GameObject>();
 
     [SerializeField] GameObject puzzleCompleteUI;
+    [SerializeField] GameObject puzzleCompleteAlternateUI;
 
     public Transform selectedObject;
     public Collider selectedObjectCollider;
+
+    [SerializeField] bool wonTheGame = false;
 
     [SerializeField] Transform target;
 
@@ -45,6 +48,11 @@ public class GameManager : MonoBehaviour
             Debug.LogWarning("GameManager missing Puzzle Complete UI!");
         }
 
+        if (puzzleCompleteAlternateUI == null)
+        {
+            Debug.LogWarning("GameManager missing Puzzle Complete Alternate UI!");
+        }
+
     }
 
         // Start is called before the first frame update
@@ -57,26 +65,52 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
-        currentPuzzleComplete = CheckIfComplete();
-        if (currentPuzzleComplete)
+        if (!wonTheGame)
         {
-            foreach (GameObject puzzlePiece in placedPuzzlePieces)
+
+            if (CheckIfComplete())
             {
-                puzzlePiece.GetComponent<PuzzleMover>().pauseAllMovement = true;
+                Debug.Log("Completed This Puzzle");
+                foreach (GameObject puzzlePiece in placedPuzzlePieces)
+                {
+                    puzzlePiece.GetComponent<PuzzleMover>().pauseAllMovement = true;
+                }
+
+
+                //open UI
+                if (puzzleCompleteUI != null)
+                {
+                    puzzleCompleteUI.SetActive(true);
+                }
+                else
+                {
+                    StartCoroutine(WaitWinTimer(3));
+                }
             }
 
 
-            //open UI
-            if (puzzleCompleteUI != null)
+            if (CheckIfAlternateComplete())
             {
-                puzzleCompleteUI.SetActive(true);
-            }
-            else
-            {
-                StartCoroutine(WaitWinTimer(3));
+                Debug.Log("Completed AltSolution");
+
+                foreach (GameObject puzzlePiece in placedPuzzlePieces)
+                {
+                    puzzlePiece.GetComponent<PuzzleMover>().pauseAllMovement = true;
+                }
+
+
+                //open UI
+                if (puzzleCompleteAlternateUI != null)
+                {
+                    puzzleCompleteAlternateUI.SetActive(true);
+                }
+                else
+                {
+                    StartCoroutine(WaitWinTimer(3));
+                }
             }
         }
+
     }
 
     [System.Serializable]
@@ -100,6 +134,7 @@ public class GameManager : MonoBehaviour
         {
             Debug.Log("YouWon?");
             //you won?
+            wonTheGame = true;
             return;
         }
         else { 
@@ -182,13 +217,31 @@ public class GameManager : MonoBehaviour
         return solved;
     }
 
+    public bool CheckIfAlternateComplete()
+    {
+        bool solved = true;
+
+        //if list is empty
+        if (puzzleContainer.transform.childCount == 0) { return false; }
+
+        foreach (GameObject puzzlePiece in placedPuzzlePieces)
+        {
+            if (!puzzlePiece.GetComponent<PuzzleObject>().CheckIfAtAlternateTarget())
+            {
+                solved = false;
+                //Debug.Log("not solved");
+            }
+        }
+        return solved;
+    }
+
     IEnumerator WaitWinTimer (int waitTime)
     {
         //here is the code before
-        print(Time.time);
+        //print(Time.time);
         yield return new WaitForSeconds(waitTime);
         //here is the code after
-        print(Time.time);
+        //print(Time.time);
         NextPuzzle();
     }
 
