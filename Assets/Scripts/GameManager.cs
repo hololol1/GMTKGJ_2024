@@ -182,6 +182,10 @@ public class GameManager : MonoBehaviour
     {
         LoadPuzzle(currentPuzzle+1);
         Debug.Log("PuzzleComplete, loading Puzzle " + currentPuzzle);
+        if (puzzleCompleteUI.activeSelf)
+        {
+            puzzleCompleteUI.SetActive(false);
+        }
     }
 
     public bool CheckIfComplete()
