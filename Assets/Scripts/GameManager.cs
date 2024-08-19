@@ -23,6 +23,8 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] bool wonTheGame = false;
 
+    [SerializeField] bool wonTheGameAndUI = false;
+
     [SerializeField] Transform target;
 
     private void Awake()
@@ -65,10 +67,20 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        bool complete = CheckIfComplete();
+
+        if (wonTheGame && !wonTheGameAndUI)
+        {
+            Debug.Log("won the game");
+            wonTheGameAndUI = true;
+            StartCoroutine(WaitWinGameTimerMenu(1));
+
+        }
+
         if (!wonTheGame)
         {
 
-            if (CheckIfComplete())
+            if (complete)
             {
                 Debug.Log("Completed This Puzzle");
                 foreach (GameObject puzzlePiece in placedPuzzlePieces)
@@ -226,6 +238,20 @@ public class GameManager : MonoBehaviour
             }
         }
         */
+        if (solved)
+        {
+            //check if you won the game
+            
+            if (currentPuzzle >= puzzle.Length-1)
+            {
+                Debug.Log("YouWon?");
+                //you won?
+                wonTheGame = true;
+ 
+            }
+        }
+
+
         return solved;
     }
 
@@ -244,6 +270,19 @@ public class GameManager : MonoBehaviour
                 //Debug.Log("not solved");
             }
         }
+        if (solved)
+        {
+            //check if you won the game
+
+            if (currentPuzzle >= puzzle.Length-1)
+            {
+                Debug.Log("YouWon?");
+                //you won?
+                wonTheGame = true;
+
+            }
+        }
+
         return solved;
     }
 
@@ -266,6 +305,18 @@ public class GameManager : MonoBehaviour
         //print(Time.time);
         Debug.Log("activated UI");
         puzzleCompleteUI.SetActive(true);
+        //NextPuzzle();
+    }
+
+    IEnumerator WaitWinGameTimerMenu(int waitTime)
+    {
+        //here is the code before
+        //print(Time.time);
+        yield return new WaitForSeconds(waitTime);
+        //here is the code after
+        //print(Time.time);
+        Debug.Log("activated aternateUI");
+        puzzleCompleteAlternateUI.SetActive(true);
         //NextPuzzle();
     }
 
