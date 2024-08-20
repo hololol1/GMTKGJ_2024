@@ -195,7 +195,7 @@ PrefabInstance:
     - target: {fileID: 7739905184605696418, guid: 6f485efabbedbd346a008a86ae18062f,
         type: 3}
       propertyPath: allowedErrorMarginRotation
-      value: 7.5
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 7739905184605696418, guid: 6f485efabbedbd346a008a86ae18062f,
         type: 3}

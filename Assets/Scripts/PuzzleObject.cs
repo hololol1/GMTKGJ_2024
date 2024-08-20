@@ -34,6 +34,8 @@ public class PuzzleObject : MonoBehaviour
 
     [SerializeField] public bool hasAlternateSolution;
 
+    //bool lerpActive = false;
+
 
     //check if the object is at the pos it's supposed to be
     private void Start()
@@ -47,11 +49,23 @@ public class PuzzleObject : MonoBehaviour
 
     private void Update()
     {
+        // transform.GetComponent<PuzzleMover>().StartCoroutine()
+        //StartCoroutine(transform.GetComponent<PuzzleMover>().MoveToComplete(targets[0].targetPosition,5));
+ 
+
         atTarget = CheckIfAtTarget();
         atTargetPosition = CheckIfAtTargetPosition();
         atTargetRotation = CheckIfAtTargetRotation();
+
+
+
+        //transform.GetComponent<PuzzleMover>().MoveToComplete(targets[0].adjustedTargetPosition, targets[0].targetRotation, 2);
     }
 
+    private void FixedUpdate()
+    {
+        
+    }
 
     [System.Serializable]
     public class Target

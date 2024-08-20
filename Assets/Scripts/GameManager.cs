@@ -67,12 +67,41 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!currentPuzzleComplete)
+        {
+            if (CheckIfComplete())
+            {
+                currentPuzzleComplete = true;
+
+                foreach (GameObject puzzlePiece in placedPuzzlePieces)
+                {
+                    Debug.Log("Completed this puzle and started lerping");
+                    puzzlePiece.GetComponent<PuzzleMover>().pauseAllMovement = true;
+                    puzzlePiece.GetComponent<PuzzleMover>().lerpActive = true;
+
+                }
+            }
+
+        }
+
+
+
         bool complete = CheckIfComplete();
+
 
         if (wonTheGame && !wonTheGameAndUI)
         {
             Debug.Log("won the game");
+            foreach (GameObject puzzlePiece in placedPuzzlePieces)
+            {
+                puzzlePiece.GetComponent<PuzzleMover>().pauseAllMovement = true;
+                //puzzlePiece.GetComponent<PuzzleMover>().lerpActive = true;
+
+            }
+
+
             wonTheGameAndUI = true;
+
             StartCoroutine(WaitWinGameTimerMenu(1));
 
         }
@@ -86,6 +115,7 @@ public class GameManager : MonoBehaviour
                 foreach (GameObject puzzlePiece in placedPuzzlePieces)
                 {
                     puzzlePiece.GetComponent<PuzzleMover>().pauseAllMovement = true;
+                    //puzzlePiece.GetComponent<PuzzleMover>().lerpActive = true;
                 }
 
 
@@ -192,6 +222,7 @@ public class GameManager : MonoBehaviour
         foreach (GameObject puzzlePiece in placedPuzzlePieces)
         {
             puzzlePiece.GetComponent<PuzzleMover>().pauseAllMovement = false;
+
         }
     }
 
@@ -204,6 +235,13 @@ public class GameManager : MonoBehaviour
             puzzleCompleteUI.SetActive(false);
         }
         puzzleCompleteUI.SetActive(false);
+
+        foreach (GameObject puzzlePiece in placedPuzzlePieces)
+        {
+            puzzlePiece.GetComponent<PuzzleMover>().lerpActive = false;
+        }
+        currentPuzzleComplete = false;
+
         Debug.Log("deactivated UI");
 
     }
@@ -247,6 +285,7 @@ public class GameManager : MonoBehaviour
                 Debug.Log("YouWon?");
                 //you won?
                 wonTheGame = true;
+
  
             }
         }

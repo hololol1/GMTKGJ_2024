@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -61,11 +62,17 @@ public class PuzzleMover : MonoBehaviour
         if (pauseAllMovement)
         {
             PauseMovement();
+            if (lerpActive)
+            {
+                lerpActive = MoveToComplete(transform.GetComponent<PuzzleObject>().targets[0].adjustedTargetPosition, transform.GetComponent<PuzzleObject>().targets[0].targetRotation, 0.01f);
+            }
         }
         else
         {
             MoveObject();
         }
+
+        //lerpActive = MoveToComplete(transform.GetComponent<PuzzleObject>().targets[0].adjustedTargetPosition, transform.GetComponent<PuzzleObject>().targets[0].targetRotation, 0.01f);
 
         //Rotation();
         //DragObject();
@@ -195,8 +202,13 @@ public class PuzzleMover : MonoBehaviour
         {
             //no longer rotating manually
             rotating = false;
-            //apply rotation according to prior movement amount
-            rb.AddTorque((Input.GetAxis("Mouse Y") * dragAmount * Time.deltaTime), -(Input.GetAxis("Mouse X") * dragAmount * Time.deltaTime), 0);
+
+            if (selected) 
+            {
+                //apply rotation according to prior movement amount
+                rb.AddTorque((Input.GetAxis("Mouse Y") * dragAmount * Time.deltaTime), -(Input.GetAxis("Mouse X") * dragAmount * Time.deltaTime), 0);
+            }
+
 
             #region OldCode
 
@@ -394,4 +406,75 @@ public class PuzzleMover : MonoBehaviour
         GameManager.instance.selectedObjectCollider.enabled = true;
         //col.enabled = true;
     }
+
+
+
+    private float currentLerpingTime = 0f;
+    //private float speed = 25f;
+    private float totalElapsedTime = 0f;
+    private float lerpDuration = 1.0f;
+
+    public bool lerpActive = true;
+
+    public bool MoveToComplete(Vector3 targetPosition, Quaternion targetRotation, float speed)
+    {
+
+        currentLerpingTime = Mathf.Clamp01(currentLerpingTime + (speed * Time.deltaTime));
+        float t = currentLerpingTime / lerpDuration;
+        //Debug.Log(currentLerpingTime);
+        transform.position = Vector3.Lerp(transform.position, targetPosition,  t);
+        transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation,  t);
+        //Debug.Log(targetRotation);
+        // player.localRotation = Quaternion.Lerp(player.localRotation, Quaternion.LookRotation(hitPosition), t);
+        totalElapsedTime = +Time.deltaTime;
+
+        if((transform.position - targetPosition).sqrMagnitude < 0.0001 &&
+            Quaternion.Angle(transform.rotation.normalized, targetRotation) < 0.0001)
+        {
+            transform.position = targetPosition;
+            transform.rotation = targetRotation;
+            Debug.Log("Lerping Has Finished!1" + totalElapsedTime);
+            currentLerpingTime = 0;
+            return false;
+        }
+        //Debug.Log(t);
+        if (t >= 1)
+        {
+            Debug.Log("Lerping Has Finished!");
+            currentLerpingTime = 0;
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+
+    }
+
+    /*
+    public IEnumerator MoveToComplete(Vector3 targetPosition, int lerpDuration)
+    {
+        //if the target 
+        CurrentLerpingTime = Mathf.Clamp01(CurrentLerpingTime + (speed * Time.deltaTime));
+        t = CurrentLerpingTime / LerpTime;
+        //while (true)
+        //{
+        timeSinceStarted += Time.deltaTime;
+        if (timeSinceStarted < lerpDuration)
+        {
+            transform.position = Vector3.Lerp(transform.position, targetPosition, timeSinceStarted);
+            Debug.Log(timeSinceStarted);
+            yield return null;
+        }
+        else 
+        {
+            transform.position = targetPosition;
+        }
+        Debug.Log("Moving complete");
+            yield break;
+        //}
+    }
+    */
+
+
 }
