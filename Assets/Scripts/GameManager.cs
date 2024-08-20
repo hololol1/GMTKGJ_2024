@@ -26,6 +26,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] bool wonTheGameAndUI = false;
 
     [SerializeField] Transform target;
+    public AudioSource winSound;
 
     private void Awake()
     {
@@ -67,9 +68,10 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        bool complete = CheckIfComplete();
         if (!currentPuzzleComplete)
         {
-            if (CheckIfComplete())
+            if (complete)
             {
                 currentPuzzleComplete = true;
 
@@ -80,13 +82,13 @@ public class GameManager : MonoBehaviour
                     puzzlePiece.GetComponent<PuzzleMover>().lerpActive = true;
 
                 }
+                winSound.Play();
             }
-
         }
 
 
 
-        bool complete = CheckIfComplete();
+
 
 
         if (wonTheGame && !wonTheGameAndUI)
@@ -124,7 +126,7 @@ public class GameManager : MonoBehaviour
                 {
                     if(puzzleCompleteUI.activeSelf == false)
                     {
-                        StartCoroutine(WaitWinTimerMenu(1));
+                        StartCoroutine(WaitWinTimerMenu(0));
                     }
                     //puzzleCompleteUI.SetActive(true);
 
