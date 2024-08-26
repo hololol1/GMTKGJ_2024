@@ -117,6 +117,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: PuzzlePieceBaseButterflyHalf_01
       objectReference: {fileID: 0}
+    - target: {fileID: 2664164840911906184, guid: 6f485efabbedbd346a008a86ae18062f,
+        type: 3}
+      propertyPath: rotationSpeed
+      value: 400
+      objectReference: {fileID: 0}
     - target: {fileID: 4223728262708394272, guid: 6f485efabbedbd346a008a86ae18062f,
         type: 3}
       propertyPath: m_Enabled
